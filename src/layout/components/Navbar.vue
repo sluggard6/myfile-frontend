@@ -7,8 +7,9 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <el-avatar :size="50" :src="avatar+'?imageView2/1/w/80/h/80'" shape="square" @error="errorHandler">
+            <el-avatar icon="el-icon-user-solid" :size="50" shape="square" />
+          </el-avatar>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
@@ -54,6 +55,9 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    errorHandler() {
+      return true
     }
   }
 }
