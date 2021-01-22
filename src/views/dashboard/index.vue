@@ -6,7 +6,8 @@
         <template slot-scope="scope">{{ scope.row.date }}</template>
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="120" />
-      <el-table-column prop="address" label="地址" show-overflow-tooltip />
+      <el-table-column prop="address" label="操作" show-overflow-tooltip />
+      <el-table-column prop="created_at" label="创建时间" show-overflow-tooltip />
     </el-table>
   </div>
 </template>
@@ -34,7 +35,7 @@ export default {
   methods: {
     async getLibrarys() {
       const res = await getLibrarys('mine')
-      this.librarys = res.librarys
+      this.librarys = res.data
     }
   }
 }
