@@ -54,7 +54,22 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
+  {
+    path: 'folder',
+    component: Layout,
+    hidden: true,
+    meta: { title: 'Folder', icon: 'dashboard' },
+    children: [
+      {
+        path: '/folder/:id(\\d+)',
+        component: () => import('@/views/folder/index'),
+        name: 'EditArticle',
+        meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
+        hidden: true
 
+      }
+    ]
+  },
   {
     path: '/example',
     component: Layout,
