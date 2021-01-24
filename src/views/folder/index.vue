@@ -13,6 +13,17 @@ export default {
       folders: [],
       files: []
     })
+  },
+  methods: {
+    async getFolders() {
+      const res = await getFolders('mine')
+      this.librarys = res.data
+      this.librarys.forEach(e => {
+        // e.active = false
+        this.$set(e, 'active', false)
+        this.$set(e, 'display', false)
+      })
+    }
   }
 }
 </script>
