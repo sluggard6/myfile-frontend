@@ -12,7 +12,7 @@
       </el-table-column>
       <el-table-column label="名称" width="120">
         <template slot-scope="{row}">
-          <router-link :to="'/folder/1'">
+          <router-link :to="'/folder/' + row.rootFolder.id">
             <el-link class="link-type">{{ row.name }}</el-link>
           </router-link>
         </template>

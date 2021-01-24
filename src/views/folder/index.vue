@@ -1,28 +1,34 @@
 <template>
   <div class="app-container">
-    <h3>详情页面</h3>
-    <el-table :data="folders" style="width: 100%" highlight-current-row @cell-mouse-enter="optionShow" @cell-mouse-leave="optionHide">
+    <h3>详情页面{{ folderId }}</h3>
+    <el-table :data="children" style="width: 100%" highlight-current-row>
+      <el-table-column type="selection" width="55" />
+      <el-table-column label="名称" width="120">
+        <template slot-scope="{row}">
+          <router-link :to="'/folder/1'">
+            <el-link class="link-type">{{ row.name }}</el-link>
+          </router-link>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
 <script>
+import { getChildren } from '@/api/folder'
+
 export default {
   name: 'Folder',
   data() {
     return ({
-      folders: [],
-      files: []
+      folderId: this.$route.params.id,
+      children: []
     })
   },
   methods: {
     async getFolders() {
-      const res = await getFolders('mine')
-      this.librarys = res.data
-      this.librarys.forEach(e => {
-        // e.active = false
-        this.$set(e, 'active', false)
-        this.$set(e, 'display', false)
-      })
+      const res = await getChildren(this.folderId)
+      this.folders = res.data.folders
+      this.files = res.data.files
     }
   }
 }
