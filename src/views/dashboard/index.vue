@@ -35,7 +35,7 @@
           </transition>
         </template>
       </el-table-column>
-      <el-table-column prop="created_at" label="创建时间" show-overflow-tooltip />
+      <el-table-column prop="createdAt" label="创建时间" show-overflow-tooltip />
     </el-table>
     <el-dialog :title="title" :visible.sync="dialogShow">
       <el-tabs tab-position="left" style="margin-bottom: 30px;">
