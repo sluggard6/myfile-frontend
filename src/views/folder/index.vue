@@ -13,7 +13,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-row>
+    <!-- <el-row>
       <el-col>
         <div class="el-button-row">
           <el-upload
@@ -32,7 +32,7 @@
           <el-button type="primary">上传22...</el-button>
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 <script>
@@ -46,11 +46,17 @@ export default {
       children: []
     })
   },
+  created() {
+    this.getFolders()
+  },
   methods: {
     async getFolders() {
       const res = await getChildren(this.folderId)
-      this.folders = res.data.folders
-      this.files = res.data.files
+      // this.folders = res.data.folders
+      // this.files = res.data.files
+      console.log(res)
+      this.children = res.data.folders.concat(res.data.files)
+      console.log(this.children)
     }
   }
 }

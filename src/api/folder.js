@@ -6,3 +6,11 @@ export function getChildren(id) {
     method: 'get'
   })
 }
+
+export function createFolder(id, name) {
+  return request({
+    url: 'folder/' + id,
+    method: 'post',
+    params: name
+  })
+}
