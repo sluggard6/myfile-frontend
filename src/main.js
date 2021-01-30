@@ -14,7 +14,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
+import myUpload from 'vue-image-crop-upload'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -28,6 +28,7 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
+Vue.component('my-upload', myUpload)
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明

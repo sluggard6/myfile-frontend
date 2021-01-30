@@ -13,26 +13,25 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <el-row>
+    <el-row>
       <el-col>
         <div class="el-button-row">
           <el-upload
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            :action="`${base_api}file/upload`"
+            :data="params"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :before-remove="beforeRemove"
-            multiple
-            :limit="3"
-            :on-exceed="handleExceed"
-            :file-list="fileList"
+            :with-credentials="withCredentials"
+            :show-file-list="false"
           >
             <el-button type="primary" style="margin-right: 10px;">上传文件</el-button>
           </el-upload>
           <el-button type="primary">上传22...</el-button>
         </div>
       </el-col>
-    </el-row> -->
+    </el-row>
   </div>
 </template>
 <script>
@@ -43,11 +42,21 @@ export default {
   data() {
     return ({
       folderId: this.$route.params.id,
-      children: []
+      children: [],
+      imagecropperShow: false,
+      show: false,
+      withCredentials: true,
+      params: {
+        folderId: this.$route.params.id
+      },
+      base_api: process.env.VUE_APP_BASE_API
     })
   },
   created() {
     this.getFolders()
+  },
+  mounted() {
+    this.base_api = process.env.VUE_APP_BASE_API
   },
   methods: {
     async getFolders() {
@@ -57,6 +66,15 @@ export default {
       console.log(res)
       this.children = res.data.folders.concat(res.data.files)
       console.log(this.children)
+    },
+    handleRemove() {
+      console.log('---------handleRemove---------')
+    },
+    beforeRemove() {
+      console.log('---------beforeRemove---------')
+    },
+    handlePreview() {
+      console.log('---------handlePreview---------')
     }
   }
 }
