@@ -5,14 +5,12 @@
     </el-row>
     <el-table :data="children" style="width: 100%" highlight-current-row @cell-mouse-enter="optionShow" @cell-mouse-leave="optionHide">
       <el-table-column type="selection" width="55" />
-      <el-table-column label="名称" width="120">
+      <el-table-column label="名称" width="250">
         <template slot-scope="{row}">
           <router-link v-if="row.isFolder" :to="'/folder/'+row.id">
             <el-link class="link-type">{{ row.name }}</el-link>
           </router-link>
-          <router-link v-else :to="'/file/'+row.id">
-            <el-link class="link-type">{{ row.name }}</el-link>
-          </router-link>
+          <el-link class="link-type" @click="openFile(row)">{{ row.name }}</el-link>
         </template>
       </el-table-column>
       <el-table-column label="大小" width="120">
@@ -61,14 +59,20 @@
         </div>
       </el-col>
     </el-row>
+    <file-player :dialog-show="dialogShow" :title="fileName" />
   </div>
 </template>
 <script>
+import FilePlayer from '@/components/Player'
 import { getChildren } from '@/api/folder'
 import { Message } from 'element-ui'
 
 export default {
   name: 'Folder',
+  comments: {
+    FilePlayer
+  },
+  components: { FilePlayer },
   data() {
     return ({
       folderId: this.$route.params.id,
@@ -79,7 +83,9 @@ export default {
       params: {
         folderId: this.$route.params.id
       },
-      base_api: process.env.VUE_APP_BASE_API
+      base_api: process.env.VUE_APP_BASE_API,
+      dialogShow: false,
+      fileName: ''
     })
   },
   created() {
@@ -109,6 +115,10 @@ export default {
       // this.children = res.data.folders.concat(res.data.files)
       console.log(this.children)
     },
+    openFile(row) {
+      this.fileName = row.name
+      this.dialogShow = true
+    },
     optionShow(row) {
       row.optionDisplay = true
     },
@@ -124,6 +134,11 @@ export default {
           duration: 5 * 1000
         })
       }
+      const resFile = res.data
+      resFile.isFolder = false
+      resFile.show = false
+      resFile.optionDisplay = false
+      this.children.push(resFile)
     },
     handleRemove() {
       console.log('---------handleRemove---------')
