@@ -24,7 +24,7 @@
       <el-table-column prop="address" label="操作" show-overflow-tooltip>
         <template slot-scope="{row}">
           <transition name="el-fade-in">
-            <div v-show="row.display">
+            <div v-show="row.optionDisplay">
               <el-tooltip effect="light" placement="top" content="分享" transition="el-fade-in">
                 <div class="icon-item">
                   <i class="el-icon-share" @click="{dialogShow=true;title='共享资料库'+row.name}" />
@@ -39,6 +39,7 @@
           </transition>
         </template>
       </el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" show-overflow-tooltip />
     </el-table>
     <el-row>
       <el-col>
@@ -56,7 +57,7 @@
           >
             <el-button type="primary" style="margin-right: 10px;">上传文件</el-button>
           </el-upload>
-          <el-button type="primary">上传22...</el-button>
+          <el-button type="primary">新建文件夹</el-button>
         </div>
       </el-col>
     </el-row>
@@ -96,21 +97,23 @@ export default {
       this.children = res.data.folders.map(function(obj, index) {
         obj.isFolder = true
         obj.show = false
+        obj.optionDisplay = false
         return obj
       // }).concat(res.data.files)
       }).concat(res.data.files.map(function(obj, index) {
         obj.isFolder = false
         obj.show = false
+        obj.optionDisplay = false
         return obj
       }))
       // this.children = res.data.folders.concat(res.data.files)
       console.log(this.children)
     },
     optionShow(row) {
-      row.display = true
+      row.optionDisplay = true
     },
     optionHide(row) {
-      row.display = false
+      row.optionDisplay = false
     },
     handleSuccess(res, file, fileList) {
       console.log(res)
@@ -165,5 +168,15 @@ export default {
     display: flex;
     justify-content: flex-end;
     padding: 5px;
+  }
+  .icon-item {
+    // margin: 0px;
+    // height: 35px;
+    text-align: center;
+    width: 30px;
+    float: left;
+    font-size: 20px;
+    color: #24292e;
+    cursor: pointer;
   }
 </style>
