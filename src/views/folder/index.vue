@@ -33,6 +33,11 @@
                   <i class="el-icon-delete-solid" />
                 </div>
               </el-tooltip>
+              <el-tooltip effect="light" placement="top" content="下载" transition="el-fade-in">
+                <div class="icon-item">
+                  <i class="el-icon-download" />
+                </div>
+              </el-tooltip>
             </div>
           </transition>
         </template>
