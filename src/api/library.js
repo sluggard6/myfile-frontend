@@ -9,3 +9,23 @@ export function getLibrarys(type) {
     }
   })
 }
+
+export function checkLibraryName(name) {
+  return request({
+    url: '/library/check',
+    method: 'get',
+    params: {
+      name
+    }
+  })
+}
+
+export function createLibrary(name) {
+  return request({
+    url: '/library',
+    method: 'put',
+    params: {
+      name
+    }
+  })
+}

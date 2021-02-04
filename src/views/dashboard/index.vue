@@ -37,6 +37,13 @@
       </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" show-overflow-tooltip />
     </el-table>
+    <el-row>
+      <el-col>
+        <div class="el-button-row">
+          <el-button type="primary" @click="createLibraryShow=true">新建资料库</el-button>
+        </div>
+      </el-col>
+    </el-row>
     <el-dialog :title="title" :visible.sync="dialogShow">
       <el-tabs tab-position="left" style="margin-bottom: 30px;">
         <el-tab-pane label="共享给用户">
@@ -47,12 +54,24 @@
         <el-tab-pane label="共享给呵呵">共享给呵呵</el-tab-pane>
       </el-tabs>
     </el-dialog>
+    <el-dialog title="创建资料库" :visible.sync="createLibraryShow">
+      <el-form label-width="120px">
+        <el-form-item label="Library Name">
+          <el-input v-model="newLibraryName" placeholder="请输入资料库名称" clearable @focus="checkedName=true" @blur="chekcName" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :disabled="checkedName" @click="createLibrary">确定</el-button>
+          <el-button @click="createLibraryShow=false">Cancel</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { getLibrarys } from '@/api/library'
+import { getLibrarys, checkLibraryName, createLibrary } from '@/api/library'
+import { Message } from 'element-ui'
 
 export default {
   name: 'Dashboard',
@@ -60,7 +79,10 @@ export default {
     return {
       librarys: [],
       dialogShow: false,
-      title: '共享资料库'
+      title: '共享资料库',
+      createLibraryShow: false,
+      checkedName: true,
+      newLibraryName: ''
     }
   },
   computed: {
@@ -87,6 +109,24 @@ export default {
     },
     optionHide(row) {
       row.display = false
+    },
+    async chekcName() {
+      console.log(this.newLibraryName)
+      if (this.newLibraryName === '') { return }
+      const res = await checkLibraryName(this.newLibraryName)
+      console.log(res)
+      this.checkedName = !res.data
+      if (this.checkedName) {
+        Message({
+          message: res.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
+    },
+    async createLibrary() {
+      const res = await createLibrary(this.newLibraryName)
+      console.log(res)
     }
   }
 }
@@ -111,5 +151,10 @@ export default {
   font-size: 20px;
   color: #24292e;
   cursor: pointer;
+}
+.el-button-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
 }
 </style>
