@@ -27,8 +27,21 @@ export default {
   data() {
     return ({
       config: {
-      }
+      },
+      type: 'TXT'
     })
+  },
+  method: {
+    fileFilter: function(ext) {
+      ext = ext.toLowerCase()
+      switch (ext) {
+        case 'txt': return 'TXT'
+        case 'mp4': return 'VIDEO'
+        default: {
+          return 'DEFAULT'
+        }
+      }
+    }
   }
 }
 </script>
