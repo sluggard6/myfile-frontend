@@ -26,9 +26,16 @@
                   <i class="el-icon-share" @click="{dialogShow=true;title='共享资料库'+row.name}" />
                 </div>
               </el-tooltip>
+              <el-tooltip effect="light" placement="top" content="编辑" transition="el-fade-in">
+                <div class="icon-item">
+                  <i class="el-icon-edit" />
+                </div>
+              </el-tooltip>
               <el-tooltip effect="light" placement="top" content="删除" transition="el-fade-in">
                 <div class="icon-item">
-                  <i class="el-icon-delete-solid" />
+                  <el-popconfirm title="确定删除吗？" @onConfirm="deleteLibrary(row.id)">
+                    <i slot="reference" class="el-icon-delete-solid" />
+                  </el-popconfirm>
                 </div>
               </el-tooltip>
             </div>
@@ -70,7 +77,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getLibrarys, checkLibraryName, createLibrary } from '@/api/library'
+import { getLibrarys, checkLibraryName, createLibrary, deleteLibrary } from '@/api/library'
 import { Message } from 'element-ui'
 
 export default {
@@ -97,12 +104,16 @@ export default {
   methods: {
     async getLibrarys() {
       const res = await getLibrarys('mine')
-      this.librarys = res.data
-      this.librarys.forEach(e => {
-        // e.active = false
-        this.$set(e, 'active', false)
-        this.$set(e, 'display', false)
+      // this.librarys = res.data
+      res.data.forEach(e => {
+        e.active = false
+        e.display = false
+        this.librarys.push(e)
       })
+      // this.librarys.forEach(e => {
+      //   this.$set(e, 'active', false)
+      //   this.$set(e, 'display', false)
+      // })
     },
     optionShow(row) {
       row.display = true
@@ -126,6 +137,15 @@ export default {
     },
     async createLibrary() {
       const res = await createLibrary(this.newLibraryName)
+      var library = res.data
+      library.active = false
+      library.display = false
+      this.librarys.push(library)
+      console.log(res)
+    },
+    async deleteLibrary(id) {
+      console.log(id)
+      const res = await deleteLibrary(id)
       console.log(res)
     }
   }

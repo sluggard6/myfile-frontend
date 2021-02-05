@@ -29,3 +29,10 @@ export function createLibrary(name) {
     }
   })
 }
+
+export function deleteLibrary(id) {
+  return request({
+    url: '/library/' + id,
+    method: 'delete'
+  })
+}
