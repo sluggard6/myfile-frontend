@@ -7,9 +7,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <el-avatar :size="50" :src="avatar+'?imageView2/1/w/80/h/80'" shape="square" @error="errorHandler">
-            <el-avatar icon="el-icon-user-solid" :size="50" shape="square" />
-          </el-avatar>
+          <el-avatar :size="50" :src="avatar+'?imageView2/1/w/80/h/80'" shape="square" @error="errorHandler">admin</el-avatar>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
@@ -120,22 +118,22 @@ export default {
 
       .avatar-wrapper {
         margin-top: 5px;
-        position: relative;
+      //   position: relative;
 
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
+      //   .user-avatar {
+      //     cursor: pointer;
+      //     width: 40px;
+      //     height: 40px;
+      //     border-radius: 10px;
+      //   }
 
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
-        }
+      //   .el-icon-caret-bottom {
+      //     cursor: pointer;
+      //     position: absolute;
+      //     right: -20px;
+      //     top: 25px;
+      //     font-size: 12px;
+      //   }
       }
     }
   }
