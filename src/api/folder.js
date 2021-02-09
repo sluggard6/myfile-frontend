@@ -10,7 +10,18 @@ export function getChildren(id) {
 export function createFolder(id, name) {
   return request({
     url: 'folder/' + id,
-    method: 'post',
+    method: 'put',
     params: name
+  })
+}
+
+export function checkFolderName(id, name) {
+  return request({
+    url: 'folder/check',
+    method: 'get',
+    params: {
+      id: id,
+      name: name
+    }
   })
 }

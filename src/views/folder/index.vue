@@ -54,22 +54,32 @@
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :on-success="handleSuccess"
-            :before-remove="beforeRemove"
             :with-credentials="withCredentials"
             :show-file-list="false"
           >
             <el-button type="primary" style="margin-right: 10px;">上传文件</el-button>
           </el-upload>
-          <el-button type="primary">新建文件夹</el-button>
+          <el-button type="primary" @click="folderEditDialog=true">新建文件夹</el-button>
         </div>
       </el-col>
     </el-row>
-    <file-player :dialog-show="dialogShow" :title="fileName" />
+    <el-dialog title="创建文件夹" :visible.sync="folderEditDialog">
+      <el-form label-width="120px">
+        <el-form-item label="Folder Name">
+          <el-input v-model="folderName" placeholder="请输入文件夹名称" clearable @focus="checkedName=true" @blur="chekcName" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :disabled="checkedName" @click="createFolder">确定</el-button>
+          <el-button @click="folderEditDialog=false">Cancel</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <file-player :dialog-show="dialogShow" :title="fileName" :type="fileType" :url="fileUrl" />
   </div>
 </template>
 <script>
 import FilePlayer from '@/components/Player'
-import { getChildren } from '@/api/folder'
+import { getChildren, createFolder, checkFolderName } from '@/api/folder'
 import { Message } from 'element-ui'
 
 export default {
@@ -90,7 +100,12 @@ export default {
       },
       base_api: process.env.VUE_APP_BASE_API,
       dialogShow: false,
-      fileName: ''
+      fileName: '',
+      checkedName: false,
+      folderName: '',
+      folderEditDialog: false,
+      fileType: '',
+      fileUrl: ''
     })
   },
   created() {
@@ -123,6 +138,8 @@ export default {
     openFile(row) {
       this.fileName = row.name
       this.dialogShow = true
+      this.fileType = this.fileFilter(row.ext)
+      this.fileUrl = this.base_api + 'file/' + row.id + '/' + row.name
     },
     optionShow(row) {
       row.optionDisplay = true
@@ -145,14 +162,40 @@ export default {
       resFile.optionDisplay = false
       this.children.push(resFile)
     },
-    handleRemove() {
-      console.log('---------handleRemove---------')
-    },
-    beforeRemove() {
-      console.log('---------beforeRemove---------')
-    },
     handlePreview() {
-      console.log('---------handlePreview---------')
+
+    },
+    handleRemove() {
+
+    },
+    async chekcName() {
+      console.log(this.folderName)
+      if (this.newLibraryName === '') { return }
+      const res = await checkFolderName(this.folderName)
+      console.log(res)
+      this.checkedName = !res.data
+      if (this.checkedName) {
+        Message({
+          message: res.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
+    },
+    async createFolder() {
+      const res = await createFolder(this.folderId, this.folderName)
+      console.log(res)
+    },
+    fileFilter: function(ext) {
+      ext = ext.toLowerCase()
+      switch (ext) {
+        case 'txt': return 'TXT'
+        case 'mp4': return 'VIDEO'
+        case 'jpg': return 'IMG'
+        default: {
+          return 'DEFAULT'
+        }
+      }
     }
   }
 }
