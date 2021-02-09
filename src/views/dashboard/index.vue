@@ -18,7 +18,7 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" show-overflow-tooltip>
-        <template slot-scope="{row}">
+        <template slot-scope="{row,$index}">
           <transition name="el-fade-in">
             <div v-show="row.display">
               <el-tooltip effect="light" placement="top" content="分享" transition="el-fade-in">
@@ -33,7 +33,7 @@
               </el-tooltip>
               <el-tooltip effect="light" placement="top" content="删除" transition="el-fade-in">
                 <div class="icon-item">
-                  <el-popconfirm title="确定删除吗？" @onConfirm="deleteLibrary(row.id)">
+                  <el-popconfirm title="确定删除吗？" @onConfirm="deleteLibrary(row,$index)">
                     <i slot="reference" class="el-icon-delete-solid" />
                   </el-popconfirm>
                 </div>
@@ -61,7 +61,7 @@
         <el-tab-pane label="共享给呵呵">共享给呵呵</el-tab-pane>
       </el-tabs>
     </el-dialog>
-    <el-dialog title="创建资料库" :visible.sync="createLibraryShow">
+    <el-dialog :title="editTitle" :visible.sync="createLibraryShow">
       <el-form label-width="120px">
         <el-form-item label="Library Name">
           <el-input v-model="newLibraryName" placeholder="请输入资料库名称" clearable @focus="checkedName=true" @blur="chekcName" />
@@ -89,6 +89,7 @@ export default {
       title: '共享资料库',
       createLibraryShow: false,
       checkedName: true,
+      editTitle: '',
       newLibraryName: ''
     }
   },
@@ -141,11 +142,11 @@ export default {
       library.active = false
       library.display = false
       this.librarys.push(library)
-      console.log(res)
+      this.createLibraryShow = false
     },
-    async deleteLibrary(id) {
-      console.log(id)
-      const res = await deleteLibrary(id)
+    async deleteLibrary(row, index) {
+      const res = await deleteLibrary(row.id)
+      this.librarys.splice(index, 1)
       console.log(res)
     }
   }
