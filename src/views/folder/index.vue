@@ -16,7 +16,7 @@
       <el-table-column label="大小" width="120">
         <template slot-scope="{row}">
           <div v-if="row.isFolder">-</div>
-          <div v-else>{{ row.size }}</div>
+          <div v-else>{{ formatSize(row.size, 1) }}</div>
         </template>
       </el-table-column>
       <el-table-column prop="address" label="操作" show-overflow-tooltip>
@@ -80,6 +80,7 @@
 <script>
 import FilePlayer from '@/components/Player'
 import { getChildren, createFolder, checkFolderName } from '@/api/folder'
+import { formatSize } from '@/utils/file'
 import { Message } from 'element-ui'
 
 export default {
@@ -156,6 +157,9 @@ export default {
       resFile.show = false
       resFile.optionDisplay = false
       this.children.push(resFile)
+    },
+    formatSize(size, pointLength, units) {
+      return formatSize(size, pointLength, units)
     },
     handlePreview() {
 
