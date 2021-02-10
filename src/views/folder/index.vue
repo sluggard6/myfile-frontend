@@ -10,7 +10,7 @@
           <router-link v-if="row.isFolder" :to="'/folder/'+row.id">
             <el-link class="link-type">{{ row.name }}</el-link>
           </router-link>
-          <el-link class="link-type" @click="openFile(row)">{{ row.name }}</el-link>
+          <el-link v-else class="link-type" @click="openFile(row)">{{ row.name }}</el-link>
         </template>
       </el-table-column>
       <el-table-column label="大小" width="120">
@@ -66,15 +66,15 @@
     <el-dialog title="创建文件夹" :visible.sync="folderEditDialog">
       <el-form label-width="120px">
         <el-form-item label="Folder Name">
-          <el-input v-model="folderName" placeholder="请输入文件夹名称" clearable @focus="checkedName=true" @blur="chekcName" />
+          <el-input v-model="folderName" placeholder="请输入文件夹名称" clearable @focus="checkedName=false" @blur="chekcName" @clear="checkedName=false" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :disabled="checkedName" @click="createFolder">确定</el-button>
+          <el-button type="primary" :disabled="!checkedName" @click="createFolder">确定</el-button>
           <el-button @click="folderEditDialog=false">Cancel</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
-    <file-player :dialog-show="dialogShow" :title="fileName" :type="fileType" :url="fileUrl" />
+    <file-player :dialog-show.sync="dialogShow" :title="fileName" :type="fileType" :url="fileUrl" />
   </div>
 </template>
 <script>
@@ -117,23 +117,19 @@ export default {
   methods: {
     async getFolders() {
       const res = await getChildren(this.folderId)
-      // this.folders = res.data.folders
-      // this.files = res.data.files
       console.log(res)
-      this.children = res.data.folders.map(function(obj, index) {
+      const c = res.data.children
+      this.children = c.folders.map(function(obj, index) {
         obj.isFolder = true
         obj.show = false
         obj.optionDisplay = false
         return obj
-      // }).concat(res.data.files)
-      }).concat(res.data.files.map(function(obj, index) {
+      }).concat(c.files.map(function(obj, index) {
         obj.isFolder = false
         obj.show = false
         obj.optionDisplay = false
         return obj
       }))
-      // this.children = res.data.folders.concat(res.data.files)
-      console.log(this.children)
     },
     openFile(row) {
       this.fileName = row.name
@@ -148,7 +144,6 @@ export default {
       row.optionDisplay = false
     },
     handleSuccess(res, file, fileList) {
-      console.log(res)
       if (res.code !== 0) {
         Message({
           message: res.message || 'Error',
@@ -169,12 +164,10 @@ export default {
 
     },
     async chekcName() {
-      console.log(this.folderName)
-      if (this.newLibraryName === '') { return }
-      const res = await checkFolderName(this.folderName)
-      console.log(res)
-      this.checkedName = !res.data
-      if (this.checkedName) {
+      if (this.folderName === '') { return }
+      const res = await checkFolderName(this.folderId, this.folderName)
+      this.checkedName = res.data
+      if (!this.checkedName) {
         Message({
           message: res.message || 'Error',
           type: 'error',
@@ -189,9 +182,9 @@ export default {
     fileFilter: function(ext) {
       ext = ext.toLowerCase()
       switch (ext) {
-        case 'txt': return 'TXT'
-        case 'mp4': return 'VIDEO'
-        case 'jpg': return 'IMG'
+        case '.txt': return 'TXT'
+        case '.mp4': return 'VIDEO'
+        case '.jpg': return 'IMG'
         default: {
           return 'DEFAULT'
         }

@@ -11,7 +11,9 @@ export function createFolder(id, name) {
   return request({
     url: 'folder/' + id,
     method: 'put',
-    params: name
+    params: {
+      name: name
+    }
   })
 }
 

@@ -1,6 +1,6 @@
 <template>
-  <el-dialog :title="title" :visible.sync="dialogShow">
-    <el-image v-if="type==='IMG'" :src="src">
+  <el-dialog :title="title" :visible.sync="dialogShow" :before-close="hidePanel">
+    <el-image v-if="type==='IMG'" :src="url">
       <div slot="placeholder" class="image-slot">
         加载中<span class="dot">...</span>
       </div>
@@ -39,7 +39,10 @@ export default {
       }
     })
   },
-  method: {
+  methods: {
+    hidePanel() {
+      this.$emit('update:dialogShow', false)
+    }
   }
 }
 </script>
