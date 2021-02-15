@@ -16,9 +16,20 @@ export function getInfo(id) {
   })
 }
 
+export function queryLike(queryString) {
+  return request({
+    url: '/user/like',
+    method: 'get',
+    params: {
+      queryString: queryString
+    }
+  })
+}
+
 export function logout() {
   return request({
     url: '/vue-admin-template/user/logout',
     method: 'post'
   })
 }
+

@@ -55,7 +55,23 @@
       <el-tabs tab-position="left" style="margin-bottom: 30px;">
         <el-tab-pane label="共享给用户">
           <el-form>
-            <el-input placeholder="请输入内容" />
+            <el-select
+              v-model="shareNames"
+              multiple
+              filterable
+              remote
+              reserve-keyword
+              class="inline-input"
+              :remote-method="querySearch"
+              placeholder="请输入内容"
+              :loading="loading"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.id"
+                :value="item.username"
+              />
+            </el-select>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="共享给呵呵">共享给呵呵</el-tab-pane>
@@ -78,6 +94,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getLibrarys, checkLibraryName, createLibrary, deleteLibrary } from '@/api/library'
+import { queryLike } from '@/api/user'
 import { Message } from 'element-ui'
 
 export default {
@@ -90,7 +107,10 @@ export default {
       createLibraryShow: false,
       checkedName: true,
       editTitle: '',
-      newLibraryName: ''
+      newLibraryName: '',
+      shareNames: [],
+      options: [],
+      loading: false
     }
   },
   computed: {
@@ -115,6 +135,16 @@ export default {
       //   this.$set(e, 'active', false)
       //   this.$set(e, 'display', false)
       // })
+    },
+    async querySearch(queryString) {
+      this.loading = true
+      const res = await queryLike(queryString)
+      console.log(res)
+      this.loading = false
+      this.options = res.data
+    },
+    handleSelect(item) {
+      console.log(item)
     },
     optionShow(row) {
       row.display = true
