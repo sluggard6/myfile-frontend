@@ -55,23 +55,37 @@
       <el-tabs tab-position="left" style="margin-bottom: 30px;">
         <el-tab-pane label="共享给用户">
           <el-form>
-            <el-select
-              v-model="shareNames"
-              multiple
-              filterable
-              remote
-              reserve-keyword
-              class="inline-input"
-              :remote-method="querySearch"
-              placeholder="请输入内容"
-              :loading="loading"
-            >
-              <el-option
-                v-for="item in options"
-                :key="item.id"
-                :value="item.username"
-              />
-            </el-select>
+            <el-table>
+              <el-table-column label="用户">
+                <template slot="header">
+                  <el-select
+                    v-model="shareNames"
+                    multiple
+                    filterable
+                    remote
+                    reserve-keyword
+                    class="inline-input"
+                    :remote-method="querySearch"
+                    placeholder="请输入内容"
+                    :loading="loading"
+                  >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.id"
+                      :value="item.username"
+                    />
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column label="权限">
+                <template slot="header">
+                  <el-select>
+                    <el-option key="read">只读</el-option>
+                    <el-option key="write">读写</el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+            </el-table>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="共享给呵呵">共享给呵呵</el-tab-pane>
