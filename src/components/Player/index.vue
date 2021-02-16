@@ -5,7 +5,7 @@
         加载中<span class="dot">...</span>
       </div>
     </el-image>
-    <xgplayer :config="config" @player="Player = $event" />
+    <xgplayer v-if="type==='VIDEO'" :config.sync="config" @player="Player = $event" />
   </el-dialog>
 </template>
 <script>
@@ -36,8 +36,35 @@ export default {
   data() {
     return ({
       config: {
+        id: '',
+        url: ''
       }
     })
+  },
+  watch: {
+    type: function(newData, oldData) {
+      console.log(newData) // newData就是orderData
+      // this.newOrderData = newData
+      // methods的函数在这里调用可以获取到newOrderData的值
+      // this.order()
+      // if (newData === 'VIDEO') {
+      //   this.config = {
+      //     id: this.props.title,
+      //     url: this.props.url
+      //   }
+      // }
+      console.log(this.config)
+    },
+    url: function(newData, oldData) {
+      this.config.id = 'vs'
+      this.config.url = newData
+    }
+  },
+  mounted: function() {
+    console.log('---------------------------mounted--------------------------------------')
+  },
+  beforeUpdate() {
+    console.log('------------------------------beforeUpdate-----------------------------------')
   },
   methods: {
     hidePanel() {

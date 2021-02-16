@@ -157,6 +157,11 @@ export default {
       resFile.show = false
       resFile.optionDisplay = false
       this.children.push(resFile)
+      Message({
+        message: '上传成功',
+        type: 'success',
+        duration: 5 * 1000
+      })
     },
     formatSize(size, pointLength, units) {
       return formatSize(size, pointLength, units)
