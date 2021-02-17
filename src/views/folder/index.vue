@@ -48,8 +48,9 @@
       <el-col>
         <div class="el-button-row">
           <el-upload
+            ref="upload"
+            action=""
             class="upload-demo"
-            :action="`${base_api}file/upload`"
             :data="params"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
@@ -74,6 +75,16 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog
+      title="上传进度"
+      :visible="dialog"
+      append-to-body
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+    >
+      <el-progress :percentage="progress" />
+    </el-dialog>
     <file-player :dialog-show.sync="dialogShow" :title="fileName" :type="fileType" :url="fileUrl" />
   </div>
 </template>
@@ -82,6 +93,7 @@ import FilePlayer from '@/components/Player'
 import { getChildren, createFolder, checkFolderName } from '@/api/folder'
 import { formatSize } from '@/utils/file'
 import { Message } from 'element-ui'
+import axios from 'axios'
 
 export default {
   name: 'Folder',
@@ -106,7 +118,8 @@ export default {
       folderName: '',
       folderEditDialog: false,
       fileType: '',
-      fileUrl: ''
+      fileUrl: '',
+      progress: 0
     })
   },
   created() {
@@ -143,6 +156,41 @@ export default {
     },
     optionHide(row) {
       row.optionDisplay = false
+    },
+    submit() {
+      const files = this.$refs.upload.uploadFiles
+      if (files && files.length) {
+        const fd = new FormData()
+        files.forEach(item => {
+          fd.append('files', item.raw, item.name)
+        })
+        this.dialog = true
+        this.progress = this.loaded = this.total = 0
+        axios({
+          url: this.base_api + 'file/upload',
+          method: 'post',
+          params: this.params,
+          onUploadProgress: pe => {
+            this.progress = Number.parseInt((pe.loaded / pe.total) * 100)
+            this.loaded = pe.loaded
+            this.total = pe.total
+          },
+          data: fd,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then(res => {
+          this.$message.success('上传成功')
+          this.$refs.upload.clearFiles()
+          this.dialog = false
+        }).catch(_ => {
+          this.$message.error('上传失败')
+          this.$refs.upload.clearFiles()
+          this.dialog = false
+        })
+      } else {
+        this.$message.warning('至少选择一个文件')
+      }
     },
     handleSuccess(res, file, fileList) {
       if (res.code !== 0) {
