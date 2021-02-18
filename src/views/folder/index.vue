@@ -51,11 +51,11 @@
             ref="upload"
             action=""
             class="upload-demo"
-            :data="params"
+            :http-request="submit"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :on-success="handleSuccess"
-            :with-credentials="withCredentials"
+            :with-credentials="true"
             :show-file-list="false"
           >
             <el-button type="primary" style="margin-right: 10px;">上传文件</el-button>
@@ -77,7 +77,7 @@
     </el-dialog>
     <el-dialog
       title="上传进度"
-      :visible="dialog"
+      :visible="progressShow"
       append-to-body
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -107,10 +107,10 @@ export default {
       children: [],
       imagecropperShow: false,
       show: false,
-      withCredentials: true,
-      params: {
-        folderId: this.$route.params.id
-      },
+      // withCredentials: true,
+      // params: {
+      //   folderId: this.$route.params.id
+      // },
       base_api: process.env.VUE_APP_BASE_API,
       dialogShow: false,
       fileName: '',
@@ -119,6 +119,7 @@ export default {
       folderEditDialog: false,
       fileType: '',
       fileUrl: '',
+      progressShow: false,
       progress: 0
     })
   },
@@ -157,20 +158,25 @@ export default {
     optionHide(row) {
       row.optionDisplay = false
     },
-    submit() {
-      const files = this.$refs.upload.uploadFiles
-      if (files && files.length) {
+    submit(data) {
+      console.log(data)
+      // const files = this.$refs.upload.uploadFiles
+      if (data !== undefined) {
         const fd = new FormData()
-        files.forEach(item => {
-          fd.append('files', item.raw, item.name)
-        })
-        this.dialog = true
+        // files.forEach(item => {
+        //   fd.append('files', item.raw, item.name)
+        // })
+        fd.append('file', data.file)
+        fd.append('folderId', this.folderId)
+        this.progressShow = true
         this.progress = this.loaded = this.total = 0
         axios({
           url: this.base_api + 'file/upload',
           method: 'post',
-          params: this.params,
+          withCredentials: true,
+          // params: this.params,
           onUploadProgress: pe => {
+            console.log(pe)
             this.progress = Number.parseInt((pe.loaded / pe.total) * 100)
             this.loaded = pe.loaded
             this.total = pe.total
@@ -180,13 +186,14 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         }).then(res => {
-          this.$message.success('上传成功')
+          // this.$message.success('上传成功')
+          this.handleSuccess(res.data, data.file, data.fileList)
           this.$refs.upload.clearFiles()
-          this.dialog = false
+          this.progressShow = false
         }).catch(_ => {
           this.$message.error('上传失败')
           this.$refs.upload.clearFiles()
-          this.dialog = false
+          this.progressShow = false
         })
       } else {
         this.$message.warning('至少选择一个文件')
@@ -241,6 +248,7 @@ export default {
       switch (ext) {
         case '.txt': return 'TXT'
         case '.mp4': return 'VIDEO'
+        case '.png':
         case '.jpg': return 'IMG'
         default: {
           return 'DEFAULT'
