@@ -5,9 +5,10 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <i class="el-icon-setting" style="font-size:40px;" />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <el-avatar :size="50" :src="avatar+'?imageView2/1/w/80/h/80'" shape="square" @error="errorHandler">admin</el-avatar>
+          <el-avatar :size="40" :src="avatar+'?imageView2/1/w/80/h/80'" shape="square" @error="errorHandler">admin</el-avatar>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">

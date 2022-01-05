@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: 'Vue Admin Template',
+      title: 'My File',
       logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
     }
   }
@@ -48,6 +48,8 @@ export default {
   line-height: 50px;
   background: #2b2f3a;
   text-align: center;
+  //margin-left: 20px;
+  //text-align: left;
   overflow: hidden;
 
   & .sidebar-logo-link {

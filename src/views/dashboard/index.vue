@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h3>详情页面</h3>
+    <h3>Librarys</h3>
     <el-table :data="librarys" style="width: 100%" highlight-current-row @cell-mouse-enter="optionShow" @cell-mouse-leave="optionHide">
       <el-table-column width="55">
         <template slot-scope="{row}">

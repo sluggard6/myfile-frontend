@@ -1,7 +1,16 @@
 <template>
   <div class="app-container">
     <el-row>
-      <el-col :span="24"><div class="grid-content bg-purple-dark">详情页面{{ folderId }}</div></el-col>
+      <el-col :span="24">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item v-for="(item, index) in path" :key="item.id">
+            <span v-if="index==path.length-1" class="no-redirect">{{ pathName(item.name, index) }}</span>
+            <router-link v-else :to="'/folder/'+item.id">
+              <el-link class="link-type">{{ pathName(item.name, index) }}</el-link>
+            </router-link>
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+      </el-col>
     </el-row>
     <el-table :data="children" style="width: 100%" highlight-current-row @cell-mouse-enter="optionShow" @cell-mouse-leave="optionHide">
       <el-table-column type="selection" width="55" />
@@ -105,6 +114,8 @@ export default {
     return ({
       folderId: this.$route.params.id,
       children: [],
+      path: [],
+      libraryName: 'Default Library',
       imagecropperShow: false,
       show: false,
       // withCredentials: true,
@@ -134,6 +145,8 @@ export default {
       const res = await getChildren(this.folderId)
       console.log(res)
       const c = res.data.children
+      this.path = res.data.path
+      this.libraryName = res.data.libraryName
       this.children = c.folders.map(function(obj, index) {
         obj.isFolder = true
         obj.show = false
@@ -253,6 +266,13 @@ export default {
         default: {
           return 'DEFAULT'
         }
+      }
+    },
+    pathName: function(name, index) {
+      if (index === 0) {
+        return this.libraryName
+      } else {
+        return name
       }
     }
   }

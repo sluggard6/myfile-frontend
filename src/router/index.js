@@ -63,8 +63,6 @@ export const constantRoutes = [
       {
         path: '/folder/:id(\\d+)',
         component: () => import('@/views/folder/index'),
-        name: 'EditArticle',
-        meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
         hidden: true
 
       }
