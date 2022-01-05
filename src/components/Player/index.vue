@@ -61,10 +61,8 @@ export default {
     }
   },
   mounted: function() {
-    console.log('---------------------------mounted--------------------------------------')
   },
   beforeUpdate() {
-    console.log('------------------------------beforeUpdate-----------------------------------')
   },
   methods: {
     hidePanel() {

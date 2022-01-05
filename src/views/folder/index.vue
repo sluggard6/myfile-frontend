@@ -143,7 +143,6 @@ export default {
   methods: {
     async getFolders() {
       const res = await getChildren(this.folderId)
-      console.log(res)
       const c = res.data.children
       this.path = res.data.path
       this.libraryName = res.data.libraryName
@@ -254,7 +253,8 @@ export default {
     },
     async createFolder() {
       const res = await createFolder(this.folderId, this.folderName)
-      console.log(res)
+      this.getFolders()
+      this.folderEditDialog = false;
     },
     fileFilter: function(ext) {
       ext = ext.toLowerCase()
