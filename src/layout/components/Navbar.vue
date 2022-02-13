@@ -5,7 +5,13 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <i class="el-icon-setting" style="font-size:40px;" />
+      <div v-if="this.$store.state.user.admin" class="right-menu-item">
+        <el-tooltip effect="dark" placement="bottom" content="设置" transition="el-fade-in">
+          <router-link to="/admin">
+            <i class="el-icon-setting" style="font-size:20px;" />
+          </router-link>
+        </el-tooltip>
+      </div>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <el-avatar :size="40" :src="avatar+'?imageView2/1/w/80/h/80'" shape="square" @error="errorHandler">admin</el-avatar>
@@ -35,9 +41,12 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+// import store from '@/store'
+// import permission from '@/permission'
 // import SizeSelect from '@/components/SizeSelect'
 
 export default {
+  // directives: { permission },
   components: {
     Breadcrumb,
     Hamburger
@@ -45,8 +54,12 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'admin'
     ])
+  },
+  created() {
+    console.log(this.$store.state.user.admin)
   },
   methods: {
     toggleSideBar() {

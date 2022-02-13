@@ -46,13 +46,26 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/library/mine',
     children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
+      path: '/library/mine',
+      name: 'MyLibrary',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: 'MyLibrary', icon: 'library' }
     }]
+  },
+  {
+    path: '/libary',
+    component: Layout,
+    redirect: '/library/share',
+    children: [
+      {
+        path: 'share',
+        name: 'ShareLibrary',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: 'ShareLibrary', icon: 'share', query: 'type=share' }
+      }
+    ]
   },
   {
     path: 'folder',
@@ -63,6 +76,20 @@ export const constantRoutes = [
       {
         path: '/folder/:id(\\d+)',
         component: () => import('@/views/folder/index'),
+        hidden: true
+
+      }
+    ]
+  },
+  {
+    path: 'admin',
+    component: Layout,
+    hidden: true,
+    meta: { title: 'Admin', icon: '' },
+    children: [
+      {
+        path: '/admin',
+        component: () => import('@/views/admin/index'),
         hidden: true
 
       }

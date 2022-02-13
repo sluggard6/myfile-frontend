@@ -7,9 +7,9 @@
           <i :class="row.active?'el-icon-star-on':'el-icon-star-off'" @click="row.active=!row.active" />
         </template>
       </el-table-column>
-      <el-table-column label="日期" width="120">
+      <!-- <el-table-column label="日期" width="120">
         <template slot-scope="{row,$index}">{{ librarys[$index].active }}{{ row.active }}</template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="名称" width="120">
         <template slot-scope="{row}">
           <router-link :to="'/folder/' + row.rootFolder.id">
@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" show-overflow-tooltip />
     </el-table>
-    <el-row>
+    <el-row v-if="type == 'mine'">
       <el-col>
         <div class="el-button-row">
           <el-button type="primary" @click="libraryEditDialog=true;libraryName='';isCreateLibrary=true;">新建资料库</el-button>
@@ -112,9 +112,10 @@ import { queryLike } from '@/api/user'
 import { Message } from 'element-ui'
 
 export default {
-  name: 'Dashboard',
+  name: 'Librarys',
   data() {
     return {
+      type: this.$route.path.split('/')[2],
       librarys: [],
       dialogShow: false,
       title: '共享资料库',
@@ -140,7 +141,7 @@ export default {
   },
   methods: {
     async getLibrarys() {
-      const res = await getLibrarys('mine')
+      const res = await getLibrarys(this.type)
       this.librarys = []
       // this.librarys = res.data
       res.data.forEach(e => {
