@@ -37,6 +37,11 @@
                   <i class="el-icon-share" @click="{dialogShow=true;title='共享资料库'+row.name}" />
                 </div>
               </el-tooltip>
+              <el-tooltip effect="light" placement="top" content="编辑" transition="el-fade-in">
+                <div class="icon-item">
+                  <i class="el-icon-edit" @click="folderEditDialog=true;folderName=row.name;isCreateFolder=false;currentRow=row" />
+                </div>
+              </el-tooltip>
               <el-tooltip effect="light" placement="top" content="删除" transition="el-fade-in">
                 <div class="icon-item">
                   <i class="el-icon-delete-solid" />
@@ -69,17 +74,17 @@
           >
             <el-button type="primary" style="margin-right: 10px;">上传文件</el-button>
           </el-upload>
-          <el-button type="primary" @click="folderEditDialog=true">新建文件夹</el-button>
+          <el-button type="primary" @click="folderEditDialog=true;isCreateFolder=true;folderName=''">新建文件夹</el-button>
         </div>
       </el-col>
     </el-row>
-    <el-dialog title="创建文件夹" :visible.sync="folderEditDialog">
+    <el-dialog :title="(isCreateFolder?'创建':'重命名')+'文件夹'" :visible.sync="folderEditDialog">
       <el-form label-width="120px">
         <el-form-item label="Folder Name">
           <el-input v-model="folderName" placeholder="请输入文件夹名称" clearable @focus="checkedName=false" @blur="chekcName" @clear="checkedName=false" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :disabled="!checkedName" @click="createFolder">确定</el-button>
+          <el-button type="primary" :disabled="!checkedName" @click="isCreateFolder?createFolder():editFolder()">确定</el-button>
           <el-button @click="folderEditDialog=false">Cancel</el-button>
         </el-form-item>
       </el-form>
@@ -99,7 +104,7 @@
 </template>
 <script>
 import FilePlayer from '@/components/Player'
-import { getChildren, createFolder, checkFolderName } from '@/api/folder'
+import { getChildren, createFolder, checkFolderName, editFolder } from '@/api/folder'
 import { formatSize } from '@/utils/file'
 import { Message } from 'element-ui'
 import axios from 'axios'
@@ -128,11 +133,27 @@ export default {
       checkedName: false,
       folderName: '',
       folderEditDialog: false,
+      isCreateFolder: false,
+      currentRow: null,
       fileType: '',
       fileUrl: '',
       progressShow: false,
       progress: 0
     })
+  },
+  watch: {
+    isCreateFolder: function(newVal, oldVal) {
+      if (newVal) {
+        this.folderEditDialogTitle = '创建文件夹'
+      } else {
+        this.folderEditDialogTitle = '编辑文件夹'
+      }
+    },
+    folderEditDialog: function(newVal) {
+      if (!newVal) {
+        this.currentRow = null
+      }
+    }
   },
   created() {
     this.getFolders()
@@ -252,9 +273,14 @@ export default {
       }
     },
     async createFolder() {
-      const res = await createFolder(this.folderId, this.folderName)
+      await createFolder(this.folderId, this.folderName)
       this.getFolders()
-      this.folderEditDialog = false;
+      this.folderEditDialog = false
+    },
+    async editFolder() {
+      await editFolder(this.folderId, this.currentRow.id, this.folderName)
+      this.getFolders()
+      this.folderEditDialog = false
     },
     fileFilter: function(ext) {
       ext = ext.toLowerCase()

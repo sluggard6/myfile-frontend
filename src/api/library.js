@@ -30,6 +30,17 @@ export function createLibrary(name) {
   })
 }
 
+export function editLibrary(id, name) {
+  return request({
+    url: '/library',
+    method: 'post',
+    data: {
+      id: id,
+      name: name
+    }
+  })
+}
+
 export function deleteLibrary(id) {
   return request({
     url: '/library/' + id,

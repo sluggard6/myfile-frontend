@@ -17,6 +17,17 @@ export function createFolder(id, name) {
   })
 }
 
+export function editFolder(parentId, id, name) {
+  return request({
+    url: 'folder/' + parentId,
+    method: 'post',
+    data: {
+      id: id,
+      name: name
+    }
+  })
+}
+
 export function checkFolderName(id, name) {
   return request({
     url: 'folder/check',

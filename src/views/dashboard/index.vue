@@ -28,7 +28,7 @@
               </el-tooltip>
               <el-tooltip effect="light" placement="top" content="编辑" transition="el-fade-in">
                 <div class="icon-item">
-                  <i class="el-icon-edit" />
+                  <i class="el-icon-edit" @click="libraryEditDialog=true;libraryName=row.name;isCreateLibrary=false;currentRow=row" />
                 </div>
               </el-tooltip>
               <el-tooltip effect="light" placement="top" content="删除" transition="el-fade-in">
@@ -47,7 +47,7 @@
     <el-row>
       <el-col>
         <div class="el-button-row">
-          <el-button type="primary" @click="createLibraryShow=true">新建资料库</el-button>
+          <el-button type="primary" @click="libraryEditDialog=true;libraryName='';isCreateLibrary=true;">新建资料库</el-button>
         </div>
       </el-col>
     </el-row>
@@ -91,14 +91,14 @@
         <el-tab-pane label="共享给呵呵">共享给呵呵</el-tab-pane>
       </el-tabs>
     </el-dialog>
-    <el-dialog :title="editTitle" :visible.sync="createLibraryShow">
+    <el-dialog :title="(isCreateLibrary?'创建':'重命名')+'资料库'" :visible.sync="libraryEditDialog">
       <el-form label-width="120px">
         <el-form-item label="Library Name">
-          <el-input v-model="newLibraryName" placeholder="请输入资料库名称" clearable @focus="checkedName=true" @blur="chekcName" />
+          <el-input v-model="libraryName" placeholder="请输入资料库名称" clearable @focus="checkedName=true" @blur="chekcName" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :disabled="checkedName" @click="createLibrary">确定</el-button>
-          <el-button @click="createLibraryShow=false">Cancel</el-button>
+          <el-button type="primary" :disabled="checkedName" @click="isCreateLibrary?createLibrary():editLibrary()">确定</el-button>
+          <el-button @click="libraryEditDialog=false">Cancel</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -107,7 +107,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getLibrarys, checkLibraryName, createLibrary, deleteLibrary } from '@/api/library'
+import { getLibrarys, checkLibraryName, createLibrary, editLibrary, deleteLibrary } from '@/api/library'
 import { queryLike } from '@/api/user'
 import { Message } from 'element-ui'
 
@@ -118,13 +118,15 @@ export default {
       librarys: [],
       dialogShow: false,
       title: '共享资料库',
-      createLibraryShow: false,
+      libraryEditDialog: false,
       checkedName: true,
       editTitle: '',
-      newLibraryName: '',
+      libraryName: '',
+      currentRow: null,
       shareNames: [],
       options: [],
-      loading: false
+      loading: false,
+      isCreateLibrary: false
     }
   },
   computed: {
@@ -139,6 +141,7 @@ export default {
   methods: {
     async getLibrarys() {
       const res = await getLibrarys('mine')
+      this.librarys = []
       // this.librarys = res.data
       res.data.forEach(e => {
         e.active = false
@@ -167,9 +170,9 @@ export default {
       row.display = false
     },
     async chekcName() {
-      console.log(this.newLibraryName)
-      if (this.newLibraryName === '') { return }
-      const res = await checkLibraryName(this.newLibraryName)
+      console.log(this.libraryName)
+      if (this.libraryName === '') { return }
+      const res = await checkLibraryName(this.libraryName)
       console.log(res)
       this.checkedName = !res.data
       if (this.checkedName) {
@@ -181,12 +184,14 @@ export default {
       }
     },
     async createLibrary() {
-      const res = await createLibrary(this.newLibraryName)
-      var library = res.data
-      library.active = false
-      library.display = false
-      this.librarys.push(library)
-      this.createLibraryShow = false
+      await createLibrary(this.libraryName)
+      this.getLibrarys()
+      this.libraryEditDialog = false
+    },
+    async editLibrary() {
+      await editLibrary(this.currentRow.id, this.libraryName)
+      this.getLibrarys()
+      this.libraryEditDialog = false
     },
     async deleteLibrary(row, index) {
       const res = await deleteLibrary(row.id)

@@ -35,6 +35,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+// import SizeSelect from '@/components/SizeSelect'
 
 export default {
   components: {
