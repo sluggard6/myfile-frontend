@@ -24,10 +24,10 @@ import uploader from 'vue-simple-uploader'
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
+// if (process.env.NODE_ENV === 'production') {
+// const { mockXHR } = require('../mock')
+// mockXHR()
+// }
 
 Vue.component('my-upload', myUpload)
 // set ElementUI lang to EN
