@@ -58,9 +58,9 @@ export default {
       'admin'
     ])
   },
-  created() {
-    console.log(this.$store.state.user.admin)
-  },
+  // created() {
+  //   console.log(this.$store.state.user.admin)
+  // },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')

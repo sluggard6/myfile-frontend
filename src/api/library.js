@@ -47,3 +47,15 @@ export function deleteLibrary(id) {
     method: 'delete'
   })
 }
+
+export function shareLibrary(id, users, role) {
+  return request({
+    url: '/library/share',
+    method: 'put',
+    data: {
+      id: id,
+      users: users,
+      role: role
+    }
+  })
+}

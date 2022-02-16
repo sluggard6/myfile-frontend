@@ -23,7 +23,7 @@
             <div v-show="row.display">
               <el-tooltip effect="light" placement="top" content="分享" transition="el-fade-in">
                 <div class="icon-item">
-                  <i class="el-icon-share" @click="{dialogShow=true;title='共享资料库'+row.name};" />
+                  <i class="el-icon-share" @click="dialogShow=true;title='共享资料库<'+row.name+'>'" />
                 </div>
               </el-tooltip>
               <el-tooltip effect="light" placement="top" content="编辑" transition="el-fade-in">
@@ -51,49 +51,7 @@
         </div>
       </el-col>
     </el-row>
-    <share-dialog title="共享资料库" :visible.sync="dialogShow"/>
-    <!--
-    <el-dialog :title="title" :visible.sync="dialogShow">
-      <el-tabs tab-position="left" style="margin-bottom: 30px;">
-        <el-tab-pane label="共享给用户">
-          <el-form>
-            <el-table>
-              <el-table-column label="用户">
-                <template slot="header">
-                  <el-select
-                    v-model="shareNames"
-                    multiple
-                    filterable
-                    remote
-                    reserve-keyword
-                    class="inline-input"
-                    :remote-method="querySearch"
-                    placeholder="请输入内容"
-                    :loading="loading"
-                  >
-                    <el-option
-                      v-for="item in options"
-                      :key="item.id"
-                      :value="item.username"
-                    />
-                  </el-select>
-                </template>
-              </el-table-column>
-              <el-table-column label="权限">
-                <template slot="header">
-                  <el-select>
-                    <el-option key="read">只读</el-option>
-                    <el-option key="write">读写</el-option>
-                  </el-select>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="共享给呵呵">共享给呵呵</el-tab-pane>
-      </el-tabs>
-    </el-dialog>
-    -->
+    <share-dialog :title="title" :visible.sync="dialogShow" />
     <el-dialog :title="(isCreateLibrary?'创建':'重命名')+'资料库'" :visible.sync="libraryEditDialog">
       <el-form label-width="120px">
         <el-form-item label="Library Name">
