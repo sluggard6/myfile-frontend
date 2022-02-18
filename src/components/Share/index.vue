@@ -24,9 +24,9 @@
               </el-select>
             </el-col>
             <el-col :span="8">
-              <el-select v-model="role" placeholder="权限">
-                <el-option key="read" value="只读">只读</el-option>
-                <el-option key="write" value="读写">读写</el-option>
+              <el-select v-model="role" placeholder="权限" :change="roleOnchange()">
+                <el-option value="1" label="只读">只读</el-option>
+                <el-option value="2" label="读写">读写</el-option>
               </el-select>
             </el-col>
             <el-col :span="8">
@@ -52,6 +52,11 @@ export default {
     visible: {
       type: Boolean,
       default: false
+    },
+    id: {
+      type: Number,
+      default: 0,
+      require: true
     }
   },
   data() {
@@ -60,15 +65,19 @@ export default {
       options: [],
       loading: false,
       innerVisible: false,
-      role: ''
+      role: undefined
     }
   },
   watch: {
     innerVisible: function() {
-      this.$emit('update:visible', this.innerVisible)
+      if (this.innerVisible !== this.visible) {
+        this.$emit('update:visible', this.innerVisible)
+      }
     },
     visible: function() {
-      this.innerVisible = this.visible
+      if (this.innerVisible !== this.visible) {
+        this.innerVisible = this.visible
+      }
     }
   },
   methods: {
@@ -79,7 +88,11 @@ export default {
       this.options = res.data
     },
     async shareLibrary() {
-      const res = await shareLibrary(id, users, role)
+      const res = await shareLibrary(this.id, this.users, this.role)
+      console.log(res)
+    },
+    roleOnchange() {
+      console.log(this.role)
     }
   }
 }

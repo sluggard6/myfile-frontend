@@ -23,7 +23,7 @@
             <div v-show="row.display">
               <el-tooltip effect="light" placement="top" content="分享" transition="el-fade-in">
                 <div class="icon-item">
-                  <i class="el-icon-share" @click="dialogShow=true;title='共享资料库<'+row.name+'>'" />
+                  <i class="el-icon-share" @click="dialogShow=true;title='共享资料库<'+row.name+'>';libraryId=row.id" />
                 </div>
               </el-tooltip>
               <el-tooltip effect="light" placement="top" content="编辑" transition="el-fade-in">
@@ -51,7 +51,7 @@
         </div>
       </el-col>
     </el-row>
-    <share-dialog :title="title" :visible.sync="dialogShow" />
+    <share-dialog :id="libraryId" :title="title" :visible.sync="dialogShow" />
     <el-dialog :title="(isCreateLibrary?'创建':'重命名')+'资料库'" :visible.sync="libraryEditDialog">
       <el-form label-width="120px">
         <el-form-item label="Library Name">
@@ -88,6 +88,7 @@ export default {
       checkedName: true,
       editTitle: '',
       libraryName: '',
+      libraryId: 0,
       currentRow: null,
       shareNames: [],
       options: [],

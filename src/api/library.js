@@ -49,6 +49,11 @@ export function deleteLibrary(id) {
 }
 
 export function shareLibrary(id, users, role) {
+  console.log({
+    id: id,
+    users: users,
+    role: role
+  })
   return request({
     url: '/library/share',
     method: 'put',
