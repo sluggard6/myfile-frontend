@@ -6,8 +6,7 @@
           <el-row>
             <el-col :span="8">
               <el-select
-                v-model="users"
-                multiple
+                v-model="user"
                 filterable
                 remote
                 reserve-keyword
@@ -42,6 +41,7 @@
 <script>
 import { queryLike } from '@/api/user'
 import { shareLibrary } from '@/api/library'
+import { Message } from 'element-ui'
 export default {
   name: 'ShareDialog',
   props: {
@@ -53,7 +53,7 @@ export default {
       type: Boolean,
       default: false
     },
-    id: {
+    libraryId: {
       type: Number,
       default: 0,
       require: true
@@ -61,7 +61,7 @@ export default {
   },
   data() {
     return {
-      users: [],
+      user: undefined,
       options: [],
       loading: false,
       innerVisible: false,
@@ -77,6 +77,11 @@ export default {
     visible: function() {
       if (this.innerVisible !== this.visible) {
         this.innerVisible = this.visible
+        if (this.visible) {
+          this.role = undefined
+          this.user = undefined
+          this.options = []
+        }
       }
     }
   },
@@ -88,8 +93,13 @@ export default {
       this.options = res.data
     },
     async shareLibrary() {
-      const res = await shareLibrary(this.id, this.users, this.role)
-      console.log(res)
+      await shareLibrary(this.libraryId, this.options.map((item) => item.id), parseInt(this.role))
+      Message({
+        message: '分享成功',
+        type: 'success',
+        duration: 5 * 1000
+      })
+      this.innerVisible = false
     },
     roleOnchange() {
       console.log(this.role)

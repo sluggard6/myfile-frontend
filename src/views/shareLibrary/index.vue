@@ -12,25 +12,18 @@
       </el-table-column> -->
       <el-table-column label="名称" width="120">
         <template slot-scope="{row}">
-          <router-link :to="'/folder/' + row.rootFolder.id">
-            <el-link class="link-type">{{ row.name }}</el-link>
+          <router-link :to="'/folder/' + row.library.rootFolder.id">
+            <el-link class="link-type">{{ row.library.name }}</el-link>
           </router-link>
         </template>
+      </el-table-column>
+      <el-table-column label="分享者" width="120">
+        <template slot-scope="{row}">{{ row.library.owner.username }}</template>
       </el-table-column>
       <el-table-column label="操作" show-overflow-tooltip>
         <template slot-scope="{row,$index}">
           <transition name="el-fade-in">
             <div v-show="row.display">
-              <el-tooltip effect="light" placement="top" content="分享" transition="el-fade-in">
-                <div class="icon-item">
-                  <i class="el-icon-share" @click="dialogShow=true;title='共享资料库<'+row.name+'>';libraryId=row.id" />
-                </div>
-              </el-tooltip>
-              <el-tooltip effect="light" placement="top" content="编辑" transition="el-fade-in">
-                <div class="icon-item">
-                  <i class="el-icon-edit" @click="libraryEditDialog=true;libraryName=row.name;isCreateLibrary=false;currentRow=row" />
-                </div>
-              </el-tooltip>
               <el-tooltip effect="light" placement="top" content="删除" transition="el-fade-in">
                 <div class="icon-item">
                   <el-popconfirm title="确定删除吗？" @onConfirm="deleteLibrary(row,$index)">
@@ -44,25 +37,6 @@
       </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" show-overflow-tooltip />
     </el-table>
-    <el-row v-if="type == 'mine'">
-      <el-col>
-        <div class="el-button-row">
-          <el-button type="primary" @click="libraryEditDialog=true;libraryName='';isCreateLibrary=true;">新建资料库</el-button>
-        </div>
-      </el-col>
-    </el-row>
-    <share-dialog :library-id="libraryId" :title="title" :visible.sync="dialogShow" />
-    <el-dialog :title="(isCreateLibrary?'创建':'重命名')+'资料库'" :visible.sync="libraryEditDialog">
-      <el-form label-width="120px">
-        <el-form-item label="Library Name">
-          <el-input v-model="libraryName" placeholder="请输入资料库名称" clearable @focus="checkedName=true" @blur="chekcName" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" :disabled="checkedName" @click="isCreateLibrary?createLibrary():editLibrary()">确定</el-button>
-          <el-button @click="libraryEditDialog=false">Cancel</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
   </div>
 </template>
 
@@ -71,12 +45,10 @@ import { mapGetters } from 'vuex'
 import { getLibrarys, checkLibraryName, createLibrary, editLibrary, deleteLibrary } from '@/api/library'
 import { queryLike } from '@/api/user'
 import { Message } from 'element-ui'
-import ShareDialog from '@/components/Share'
 
 export default {
   name: 'Librarys',
   components: {
-    ShareDialog
   },
   data() {
     return {
@@ -137,10 +109,8 @@ export default {
       row.display = false
     },
     async chekcName() {
-      console.log(this.libraryName)
       if (this.libraryName === '') { return }
       const res = await checkLibraryName(this.libraryName)
-      console.log(res)
       this.checkedName = !res.data
       if (this.checkedName) {
         Message({

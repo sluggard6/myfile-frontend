@@ -62,8 +62,8 @@ export const constantRoutes = [
       {
         path: 'share',
         name: 'ShareLibrary',
-        component: () => import('@/views/dashboard/index'),
-        meta: { title: 'ShareLibrary', icon: 'share', query: 'type=share' }
+        component: () => import('@/views/shareLibrary/index'),
+        meta: { title: 'ShareLibrary', icon: 'share' }
       }
     ]
   },
