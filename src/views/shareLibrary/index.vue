@@ -42,7 +42,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getLibrarys, checkLibraryName, createLibrary, editLibrary, deleteLibrary } from '@/api/library'
+import { getLibrarys, checkLibraryName, createLibrary, editLibrary, removeShare } from '@/api/library'
 import { queryLike } from '@/api/user'
 import { Message } from 'element-ui'
 
@@ -131,7 +131,7 @@ export default {
       this.libraryEditDialog = false
     },
     async deleteLibrary(row, index) {
-      const res = await deleteLibrary(row.id)
+      const res = await removeShare(row.id, row.userId)
       this.librarys.splice(index, 1)
       console.log(res)
     }

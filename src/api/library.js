@@ -48,12 +48,19 @@ export function deleteLibrary(id) {
   })
 }
 
-export function shareLibrary(id, users, role) {
-  console.log({
-    id: id,
-    users: users,
-    role: role
+export function removeShare(id, userId) {
+  console.log(id, userId)
+  return request({
+    url: '/library/share',
+    method: 'delete',
+    data: {
+      id: id,
+      ownerId: userId
+    }
   })
+}
+
+export function shareLibrary(id, users, role) {
   return request({
     url: '/library/share',
     method: 'put',
