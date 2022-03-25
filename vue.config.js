@@ -37,7 +37,7 @@ module.exports = {
       '/api': {
         target: 'http://192.168.0.102:5678',
         changeOrigin: true,
-        pathRewrite: {'^/api': '/myfile'}
+        pathRewrite: { '^/api': '/myfile' }
       }
     },
     overlay: {
