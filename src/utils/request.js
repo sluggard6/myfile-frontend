@@ -3,9 +3,13 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
+var pathname = window.location.pathname
+var vueBase = process.env.BASE_URL
+var _baseURL = pathname.substring(0, pathname.length - vueBase.length)
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: _baseURL,
+  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 50000 // request timeout
 })
