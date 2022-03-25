@@ -35,9 +35,9 @@ module.exports = {
     // hotOnly: true,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:5678',
+        target: 'http://192.168.0.102:5678',
         changeOrigin: true,
-        pathRewrite: { '^/api': '' }
+        pathRewrite: {'^/api': '/myfile'}
       }
     },
     overlay: {
